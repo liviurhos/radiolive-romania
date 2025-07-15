@@ -1,0 +1,21 @@
+{
+  "name": "Radio Live România",
+  "short_name": "Radio România",
+  "start_url": "https://fuchsia-jonie-75.tiiny.site/?mode=suggestions",
+  "display": "standalone",
+  "background_color": "#4da6ff",
+  "theme_color": "#4da6ff",
+  "description": "Ascultă posturi live de radio din România într-o interfață simplă și modernă.",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

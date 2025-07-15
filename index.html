@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="favicon.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Radio Live România - Ascultă posturi live FM și online, inclusiv Europa FM, Kiss FM, Radio ZU, Magic FM și altele. Totul într-o singură pagină, ușor de folosit." />
+  <meta name="keywords" content="radio live România, ascultă radio online, Europa FM, Kiss FM, Radio ZU, Rock FM, Magic FM, manele, folk, 90s radio" />
+  <meta name="author" content="LAARB™ Studio Production" />
+  <title>Radio Live România - Ascultă online posturi live FM și digital</title>
+  <style>
+    :root {
+      --bg-light: #f0f0f0;
+      --text-light: #222;
+      --card-light: #99ffd6;
+      --bg-dark: #1e1e1e;
+      --text-dark: #e0e0e0;
+      --card-dark: #2b2b2b;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Segoe UI Emoji', 'Apple Color', sans-serif;
+      background-color: #4da6ff;
+      color: var(--text-light);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      letter-spacing: 0;
+      word-spacing: 0;
+      min-height: 100vh;
+      margin: 0;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    .card {
+      background-color: var(--card-light);
+      padding: 0.6em 1em;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      transition: background 0.3s;
+    }
+
+    body.dark .card {
+      background-color: var(--card-dark);
+    }
+
+    h1, .status, .bitrate {
+      font-size: 1.8em;
+      font-weight: 600;
+      margin-bottom: 0.3em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.1em;
+    }
+
+    .icon {
+      font-size: 1.6em;
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.15); opacity: 0.8; }
+    }
+
+    .title {
+      background: linear-gradient(45deg, #1976d2, #42a5f5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+
+    label {
+      font-weight: bold;
+      font-size: 1.1em;
+      display: block;
+      margin-bottom: 0.3em;
+    }
+
+    select {
+      width: 100%;
+      padding: 0.6em;
+      font-size: 1em;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 1.2em;
+      transition: border 0.3s;
+    }
+
+    select:focus {
+      border-color: #2196f3;
+      outline: none;
+    }
+
+    audio {
+      width: 100%;
+      margin-top: 1em;
+    }
+
+    #stationLogo {
+      width: 100px;
+      height: 96px;
+      object-fit: contain;
+      margin: 1em auto;
+      display: none;
+    }
+
+    .bitrate {
+      margin-top: 0.5em;
+      font-size: 1.2em;
+      color: #000000;
+      opacity: 0.8;
+    }
+
+    .status {
+      margin-top: 0.5em;
+      font-size: 1.2em;
+      opacity: 0.8;
+    }
+
+    .toggle-theme {
+      margin-top: 1em;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-size: 1.2em;
+      color: #2196f3;
+    }
+
+    .toggle-theme:hover {
+      color: #1976d2;
+    }
+
+    .volume-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.2em;
+      margin-top: 1em;
+    }
+
+    .volume-controls input[type="range"] {
+      flex: 1;
+    }
+
+    /* --- NAV Buttons --- */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin: 1em 0 0.3em;
+      gap: 1em;
+    }
+    .nav-buttons button {
+      background: black;
+      border: none;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: transform 0.2s, background 0.2s;
+      width: 90px;  /* dreptunghi vizibil */
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-buttons button:focus {
+      outline: 2px solid #1976d2;
+      outline-offset: 2px;
+    }
+    .nav-buttons button:hover {
+      background: #4293f5;
+      transform: scale(1.08);
+    }
+    body.dark .nav-buttons button:hover {
+      background: rgba(200,220,250,0.05);
+    }
+    .nav-buttons svg {
+      display: block;
+      width: 56px;
+      height: 34px;
+    }
+    .nav-buttons button:active svg polygon,
+    .nav-buttons button:active svg rect.line {
+      fill: #0d47a1;
+    }
+
+
+    footer {
+      margin-top: 2em;
+      font-size: 1.2em;
+      text-align: center;
+      color: black !important;
+      opacity: 1;
+    }
+    body.dark footer {
+      color: #ccc;
+    }
+    #footerText { color: black; }
+    body.dark #footerText { color: #ccc; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>
+      <span class="icon">📻</span>
+      <span class="title">Radio Live România</span>
+    </h1>
+
+    <label for="stationSelector">Alege postul din lista de mai jos:</label>
+    <select id="stationSelector">
+      <option value="https://live.kissfm.ro/kissfm.aacp">Kiss FM (RO)</option>
+      <option value="https://ivm.antenaplay.ro/liveaudio/radiozu/playlist.m3u8">Radio ZU (RO)</option>
+      <option value="https://live.playradio.org:8443/90HD">Play Radio Constanța - 90's (RO)</option>
+      <option value="https://live.radioprob.ro:8888/;">Radio ProB (RO)</option>
+      <option value="https://edge126.rcs-rds.ro/digifm/digi24fm.mp3">Digi 24 (RO)</option>
+      <option value="https://astreaming.edi.ro:8443/EuropaFM_aac">Europa FM (RO)</option>
+      <option value="https://live.magicfm.ro/magicfm.aacp">Magic FM (RO)</option>
+      <option value="https://live.rockfm.ro:8443/rockfm.aacp">Rock FM (RO)</option>
+      <option value="http://listen.folkbg.net:8001/folkbg">Radio FolkBG (BG)</option>
+      <option value="http://stream.fred.fm:8888/;">Radio Manele Petrecere (RO)</option>
+    </select>
+
+    <img id="stationLogo" src="" alt="Logo radio" />
+
+    <div class="bitrate" id="bitrateDisplay">📶 Bitrate: ?</div>
+
+    <div class="volume-controls">
+      <span>🔇</span>
+      <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1" />
+      <span id="volumeIcon">🔊</span>
+    </div>
+
+    <audio id="radioPlayer" controls autoplay></audio>
+
+    <div class="nav-buttons">
+      <!-- PREV STATION SVG: ca ⏮️, dreptunghiular -->
+      <button id="prevStation" title="Postul anterior" aria-label="Postul anterior">
+        <svg viewBox="0 0 56 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect class="line" x="8" y="7" width="4" height="20" rx="2" fill="white"/>
+          <polygon points="26,7 10,17 26,27" fill="white"/>
+          <polygon points="39,7 23,17 39,27" fill="white"/>
+          
+        </svg>
+      </button>
+      <!-- NEXT STATION SVG: ca ⏭️, dreptunghiular -->
+      <button id="nextStation" title="Postul următor" aria-label="Postul următor">
+        <svg viewBox="0 0 56 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect class="line" x="44" y="7" width="4" height="20" rx="2" fill="white"/>
+          <polygon points="30,7 46,17 30,27" fill="white"/>
+          <polygon points="17,7 33,17 17,27" fill="white"/>
+          
+        </svg>
+      </button>
+    </div>
+
+    <div id="status" class="status">🔄 Se încarcă...</div>
+    <button class="toggle-theme" id="toggleTheme">🌙 Trecere la dark mode</button>
+    
+    <footer>
+      <span id="footerText">Powered by LAARB™ STUDIO PRODUCTION</span>
+    </footer>
+  </div>
+
+  <script>
+    const stationSelector = document.getElementById('stationSelector');
+    const radioPlayer = document.getElementById('radioPlayer');
+    const status = document.getElementById('status');
+    const toggleThemeBtn = document.getElementById('toggleTheme');
+    const stationLogo = document.getElementById('stationLogo');
+    const bitrateDisplay = document.getElementById('bitrateDisplay');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const volumeIcon = document.getElementById('volumeIcon');
+
+    const bitrates = {
+      'antenaplay': '128 kb/s',
+      'magicfm': '128 kb/s',
+      'kissfm': '128 kb/s',
+      'rockfm': '96 kb/s',
+      'playradio': '256 kb/s',
+      'radioprob': '192 kb/s',
+      'folkbg': '320 kb/s',
+      'digi24': '128 kb/s',
+      'edi.ro': '128 kb/s'
+    };
+
+    function updateStatus(msg) {
+      status.textContent = msg;
+    }
+
+    function updateLogo(url) {
+      let logo = '';
+      if (url.includes('antenaplay')) logo = 'logos/radio_zu.png';
+      else if (url.includes('magicfm')) logo = 'logos/magic_fm.png';
+      else if (url.includes('kissfm')) logo = 'logos/kiss_fm.png';
+      else if (url.includes('rockfm')) logo = 'logos/rock_fm.png';
+      else if (url.includes('playradio')) logo = 'logos/play_radio.png';
+      else if (url.includes('radioprob')) logo = 'logos/radioprob.png';
+      else if (url.includes('folkbg')) logo = 'logos/folkbg.png';
+      else if (url.includes('digi24')) logo = 'logos/digi24.png';
+      else if (url.includes('edi.ro')) logo = 'logos/europafm.png';
+      else logo = 'logos/image.png';
+
+      stationLogo.src = logo;
+      stationLogo.style.display = 'block';
+    }
+
+    function updateBitrate(url) {
+      const key = Object.keys(bitrates).find(k => url.includes(k));
+      bitrateDisplay.textContent = key ? `📶 Bitrate: ${bitrates[key]}` : '📶 Bitrate: ?';
+    }
+
+    function initPlayer() {
+      const url = stationSelector.value;
+      radioPlayer.src = url;
+      updateLogo(url);
+      updateBitrate(url);
+      updateStatus('🔄 Se încarcă...');
+      radioPlayer.play().then(() => updateStatus('✅ Redare în curs.')).catch(() => updateStatus('❌ Eroare la redare.'));
+    }
+
+    function changeStation(newIndex) {
+      stationSelector.selectedIndex = newIndex;
+      initPlayer();
+      localStorage.setItem('lastStation', stationSelector.value);
+    }
+
+    document.getElementById('prevStation').addEventListener('click', () => {
+      const total = stationSelector.options.length;
+      const index = (stationSelector.selectedIndex - 1 + total) % total;
+      changeStation(index);
+    });
+
+    document.getElementById('nextStation').addEventListener('click', () => {
+      const total = stationSelector.options.length;
+      const index = (stationSelector.selectedIndex + 1) % total;
+      changeStation(index);
+    });
+
+    stationSelector.addEventListener('change', () => {
+      initPlayer();
+      localStorage.setItem('lastStation', stationSelector.value);
+    });
+
+    volumeSlider.addEventListener('input', () => {
+      radioPlayer.volume = volumeSlider.value;
+      volumeIcon.textContent = radioPlayer.volume == 0 ? '🔇' : '🔊';
+    });
+
+    toggleThemeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      toggleThemeBtn.textContent = document.body.classList.contains('dark') ? '☀️ Trecere la light mode' : '🌙 Trecere la dark mode';
+      document.getElementById('footerText').style.color = document.body.classList.contains('dark') ? '#ccc' : '#444';
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+    
+    if ('serviceWorker' in navigator) {
+  		window.addEventListener('load', () => {
+    		navigator.serviceWorker
+      			.register('sw.js')
+      			.then(reg => console.log('✔️ Service Worker registered:', reg))
+      			.catch(err => console.error('❌ Service Worker error:', err));
+  		});
+	}
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedStation = localStorage.getItem('lastStation');
+      const savedTheme = localStorage.getItem('theme');
+      if (savedStation) stationSelector.value = savedStation;
+      if (savedTheme === 'dark') document.body.classList.add('dark');
+      initPlayer();
+      radioPlayer.volume = volumeSlider.value;
+    });
+
+    radioPlayer.addEventListener('waiting', () => updateStatus('🔄 Se încarcă...'));
+    radioPlayer.addEventListener('error', () => updateStatus('❌ Eroare la redare.'));
+  </script>
+</body>
+</html>
