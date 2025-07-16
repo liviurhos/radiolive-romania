@@ -250,6 +250,11 @@
       <span id="volumeIcon">🔊</span>
     </div>
 
+    <p id="iosWarning" style="display: none; font-size: 0.9em; color: #c00; margin-top: 0.5em;">
+	    ⚠️ Controlul volumului nu este disponibil pe iPhone. Folosește butoanele laterale ale telefonului.
+	    ⚠️ The volume control is not available on iPhone. Use the phone's volume buttons.
+    </p>
+
     <audio id="radioPlayer" controls autoplay></audio>
 
     <div class="nav-buttons">
@@ -398,6 +403,15 @@
 
     radioPlayer.addEventListener('waiting', () => updateStatus('🔄 Se încarcă...'));
     radioPlayer.addEventListener('error', () => updateStatus('❌ Eroare la redare.'));
+
+	// Afișare avertisment pentru iPhone
+	window.addEventListener('DOMContentLoaded', () => {
+  		const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  		if (isiOS) {
+    		document.getElementById('iosWarning').style.display = 'block';
+  		}
+	});
+	
   </script>
 </body>
 </html>
