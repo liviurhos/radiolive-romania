@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <link rel="icon" href="favicon.png" type="image/png">
-  <link rel="apple-touch-icon" href="favicon.png">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="description" content="Radio Live România - Ascultă posturi live FM și online, inclusiv Europa FM, Kiss FM, Radio ZU, Magic FM și altele. Totul într-o singură pagină, ușor de folosit." />
   <meta name="keywords" content="radio live România, ascultă radio online, Europa FM, Kiss FM, Radio ZU, Rock FM, Magic FM, manele, folk, 90s radio" />
   <meta name="author" content="LAARB™ Studio Production" />
   <title>Radio Live România - Ascultă online posturi live FM și digital</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="favicon.png">
   <style>
     :root {
       --bg-light: #f0f0f0;
@@ -20,7 +20,6 @@
       --text-dark: #e0e0e0;
       --card-dark: #2b2b2b;
     }
-
     body {
       font-family: 'Segoe UI', 'Segoe UI Emoji', 'Apple Color', sans-serif;
       background-color: #4da6ff;
@@ -34,12 +33,10 @@
       margin: 0;
       transition: background 0.3s, color 0.3s;
     }
-
     body.dark {
       background-color: var(--bg-dark);
       color: var(--text-dark);
     }
-
     .card {
       background-color: var(--card-light);
       padding: 0.6em 1em;
@@ -50,11 +47,9 @@
       text-align: center;
       transition: background 0.3s;
     }
-
     body.dark .card {
       background-color: var(--card-dark);
     }
-
     h1, .status, .bitrate {
       font-size: 1.8em;
       font-weight: 600;
@@ -64,31 +59,26 @@
       justify-content: center;
       gap: 0.1em;
     }
-
     .icon {
       font-size: 1.6em;
       animation: pulse 1.8s infinite;
     }
-
     @keyframes pulse {
       0%, 100% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.15); opacity: 0.8; }
     }
-
     .title {
       background: linear-gradient(45deg, #1976d2, #42a5f5);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
     }
-
     label {
       font-weight: bold;
       font-size: 1.1em;
       display: block;
       margin-bottom: 0.3em;
     }
-
     select {
       width: 100%;
       padding: 0.6em;
@@ -98,17 +88,22 @@
       margin-bottom: 1.2em;
       transition: border 0.3s;
     }
-
     select:focus {
       border-color: #2196f3;
       outline: none;
     }
-
     audio {
       width: 100%;
       margin-top: 1em;
     }
-
+    @media (max-width: 600px) {
+      audio {
+        height: 60px;
+      }
+    }
+    audio::-webkit-media-controls-play-button {
+      transform: scale(1.5);
+    }
     #stationLogo {
       width: 100px;
       height: 96px;
@@ -116,20 +111,17 @@
       margin: 1em auto;
       display: none;
     }
-
     .bitrate {
       margin-top: 0.5em;
       font-size: 1.2em;
       color: #000000;
       opacity: 0.8;
     }
-
     .status {
       margin-top: 0.5em;
       font-size: 1.2em;
       opacity: 0.8;
     }
-
     .toggle-theme {
       margin-top: 1em;
       cursor: pointer;
@@ -138,31 +130,18 @@
       font-size: 1.2em;
       color: #2196f3;
     }
-
     .toggle-theme:hover {
       color: #1976d2;
     }
-    @media (max-width: 600px) {
-  	audio {
-    	height: 60px;
-  	}
-    }
-    audio::-webkit-media-controls-play-button {
-  	transform: scale(1.5);
-    }
-
     .volume-controls {
       display: flex;
       align-items: center;
       gap: 0.2em;
       margin-top: 1em;
     }
-
     .volume-controls input[type="range"] {
       flex: 1;
     }
-
-    /* --- NAV Buttons --- */
     .nav-buttons {
       display: flex;
       justify-content: space-between;
@@ -177,7 +156,7 @@
       cursor: pointer;
       border-radius: 10px;
       transition: transform 0.2s, background 0.2s;
-      width: 90px;  /* dreptunghi vizibil */
+      width: 90px;
       height: 48px;
       display: flex;
       align-items: center;
@@ -203,20 +182,18 @@
     .nav-buttons button:active svg rect.line {
       fill: #0d47a1;
     }
-
-
     footer {
       margin-top: 2em;
       font-size: 1.2em;
       text-align: center;
-      color: black !important;
+      color: black;
       opacity: 1;
     }
     body.dark footer {
       color: #ccc;
     }
-    #footerText { color: black; }
-    body.dark #footerText { color: #ccc; }
+    #footerText { color: inherit; }
+    body.dark #footerText { color: inherit; }
   </style>
 </head>
 <body>
@@ -251,42 +228,43 @@
     </div>
 
     <p id="iosWarning" style="display: none; font-size: 0.9em; color: #c00; margin-top: 0.5em;">
-	    ⚠️ Controlul volumului nu este disponibil pe iPhone. Folosește butoanele laterale ale telefonului.
-	    ⚠️ The volume control is not available on iPhone. Use the phone's volume buttons.
+      ⚠️ Controlul volumului nu este disponibil pe iPhone. Folosește butoanele laterale ale telefonului.<br>
+      ⚠️ The volume control is not available on iPhone. Use the phone's volume buttons.
     </p>
 
     <audio id="radioPlayer" controls autoplay></audio>
 
     <div class="nav-buttons">
-      <!-- PREV STATION SVG: ca ⏮️, dreptunghiular -->
+      <!-- PREV STATION SVG -->
       <button id="prevStation" title="Postul anterior" aria-label="Postul anterior">
-        <svg viewBox="0 0 56 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 56 34" fill="none" aria-hidden="false" focusable="false" xmlns="http://www.w3.org/2000/svg">
+          <title>Postul anterior</title>
           <rect class="line" x="8" y="7" width="4" height="20" rx="2" fill="white"/>
           <polygon points="26,7 10,17 26,27" fill="white"/>
           <polygon points="39,7 23,17 39,27" fill="white"/>
-          
         </svg>
       </button>
-      <!-- NEXT STATION SVG: ca ⏭️, dreptunghiular -->
+      <!-- NEXT STATION SVG -->
       <button id="nextStation" title="Postul următor" aria-label="Postul următor">
-        <svg viewBox="0 0 56 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 56 34" fill="none" aria-hidden="false" focusable="false" xmlns="http://www.w3.org/2000/svg">
+          <title>Postul următor</title>
           <rect class="line" x="44" y="7" width="4" height="20" rx="2" fill="white"/>
           <polygon points="30,7 46,17 30,27" fill="white"/>
           <polygon points="17,7 33,17 17,27" fill="white"/>
-          
         </svg>
       </button>
     </div>
 
     <div id="status" class="status">🔄 Se încarcă...</div>
+    <div id="nowPlaying" class="status">🎵 Now Playing: ...</div>
     <button class="toggle-theme" id="toggleTheme">🌙 Trecere la dark mode</button>
-    
     <footer>
       <span id="footerText">Powered by LAARB™ STUDIO PRODUCTION</span>
     </footer>
   </div>
 
   <script>
+    // ======= SETUP stații & bitrate =======
     const stationSelector = document.getElementById('stationSelector');
     const radioPlayer = document.getElementById('radioPlayer');
     const status = document.getElementById('status');
@@ -295,6 +273,8 @@
     const bitrateDisplay = document.getElementById('bitrateDisplay');
     const volumeSlider = document.getElementById('volumeSlider');
     const volumeIcon = document.getElementById('volumeIcon');
+    const iosWarning = document.getElementById('iosWarning');
+    const nowPlaying = document.getElementById('nowPlaying');
 
     const bitrates = {
       'antenaplay': '128 kb/s',
@@ -308,6 +288,15 @@
       'edi.ro': '128 kb/s'
     };
 
+    // ======= iOS Detection =========
+    // DOAR ODATĂ! Nu e duplicat
+    const isIOS = /iPad|iPhone|iPod/i.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS) {
+      document.querySelector('.volume-controls').style.display = 'none';
+      iosWarning.style.display = 'block';
+    }
+
+    // ======== FUNCȚII SUPPORT ========
     function updateStatus(msg) {
       status.textContent = msg;
     }
@@ -324,7 +313,6 @@
       else if (url.includes('digi24')) logo = 'logos/digi24.png';
       else if (url.includes('edi.ro')) logo = 'logos/europafm.png';
       else logo = 'logos/image.png';
-
       stationLogo.src = logo;
       stationLogo.style.display = 'block';
     }
@@ -334,15 +322,18 @@
       bitrateDisplay.textContent = key ? `📶 Bitrate: ${bitrates[key]}` : '📶 Bitrate: ?';
     }
 
+    // ======== INIT PLAYER ========
     function initPlayer() {
       const url = stationSelector.value;
       radioPlayer.src = url;
       updateLogo(url);
       updateBitrate(url);
       updateStatus('🔄 Se încarcă...');
+      nowPlaying.textContent = '🎵 Now Playing: ...';
       radioPlayer.play().then(() => updateStatus('✅ Redare în curs.')).catch(() => updateStatus('❌ Eroare la redare.'));
     }
 
+    // ======== Navigare posturi precedent/urmator ======
     function changeStation(newIndex) {
       stationSelector.selectedIndex = newIndex;
       initPlayer();
@@ -366,52 +357,64 @@
       localStorage.setItem('lastStation', stationSelector.value);
     });
 
+    // ======= Volume Control (nu pe iOS) ========
     volumeSlider.addEventListener('input', () => {
       radioPlayer.volume = volumeSlider.value;
       volumeIcon.textContent = radioPlayer.volume == 0 ? '🔇' : '🔊';
     });
 
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-	if (isIOS) {
-  	document.querySelector('.volume-controls').style.display = 'none';
-    }
-
+    // ===== TEMA dark/light =====
     toggleThemeBtn.addEventListener('click', () => {
       document.body.classList.toggle('dark');
       toggleThemeBtn.textContent = document.body.classList.contains('dark') ? '☀️ Trecere la light mode' : '🌙 Trecere la dark mode';
-      document.getElementById('footerText').style.color = document.body.classList.contains('dark') ? '#ccc' : '#444';
       localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
     });
-    
-    if ('serviceWorker' in navigator) {
-  		window.addEventListener('load', () => {
-    		navigator.serviceWorker
-      			.register('sw.js')
-      			.then(reg => console.log('✔️ Service Worker registered:', reg))
-      			.catch(err => console.error('❌ Service Worker error:', err));
-  		});
-	}
 
+    // ===== Service Worker registration =====
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker
+          .register('sw.js')
+          .then(reg => console.log('✔️ Service Worker registered:', reg))
+          .catch(err => console.error('❌ Service Worker error:', err));
+      });
+    }
+
+    // ===== On DOM load: load theme, station, set fallback dacă nu există =====
     window.addEventListener('DOMContentLoaded', () => {
       const savedStation = localStorage.getItem('lastStation');
       const savedTheme = localStorage.getItem('theme');
-      if (savedStation) stationSelector.value = savedStation;
-      if (savedTheme === 'dark') document.body.classList.add('dark');
+      // fallback: dacă savedStation nu există în listă, setează pe primul
+      let foundStation = false;
+      if (savedStation) {
+        for (let i = 0; i < stationSelector.options.length; i++) {
+          if (stationSelector.options[i].value === savedStation) {
+            stationSelector.selectedIndex = i;
+            foundStation = true;
+            break;
+          }
+        }
+      }
+      if (!foundStation) stationSelector.selectedIndex = 0;
+
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+        toggleThemeBtn.textContent = '☀️ Trecere la light mode';
+      } else {
+        document.body.classList.remove('dark');
+        toggleThemeBtn.textContent = '🌙 Trecere la dark mode';
+      }
       initPlayer();
-      radioPlayer.volume = volumeSlider.value;
+      if (!isIOS) radioPlayer.volume = volumeSlider.value;
     });
 
+    // ===== Evenimente media player =======
     radioPlayer.addEventListener('waiting', () => updateStatus('🔄 Se încarcă...'));
     radioPlayer.addEventListener('error', () => updateStatus('❌ Eroare la redare.'));
+    radioPlayer.addEventListener('playing', () => updateStatus('✅ Redare în curs.'));
 
-	// Afișare avertisment pentru iPhone
-	window.addEventListener('DOMContentLoaded', () => {
-  		const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-  		if (isiOS) {
-    		document.getElementById('iosWarning').style.display = 'block';
-  		}
-	});
-	
+    
+
   </script>
 </body>
 </html>
