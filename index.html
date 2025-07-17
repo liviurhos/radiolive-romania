@@ -263,158 +263,213 @@
     </footer>
   </div>
 
-  <script>
-    // ======= SETUP stații & bitrate =======
-    const stationSelector = document.getElementById('stationSelector');
-    const radioPlayer = document.getElementById('radioPlayer');
-    const status = document.getElementById('status');
-    const toggleThemeBtn = document.getElementById('toggleTheme');
-    const stationLogo = document.getElementById('stationLogo');
-    const bitrateDisplay = document.getElementById('bitrateDisplay');
-    const volumeSlider = document.getElementById('volumeSlider');
-    const volumeIcon = document.getElementById('volumeIcon');
-    const iosWarning = document.getElementById('iosWarning');
-    const nowPlaying = document.getElementById('nowPlaying');
+<script>
+  // ================== CONFIG ===================
+  const stationSelector = document.getElementById('stationSelector');
+  const radioPlayer = document.getElementById('radioPlayer');
+  const status = document.getElementById('status');
+  const toggleThemeBtn = document.getElementById('toggleTheme');
+  const stationLogo = document.getElementById('stationLogo');
+  const bitrateDisplay = document.getElementById('bitrateDisplay');
+  const volumeSlider = document.getElementById('volumeSlider');
+  const volumeIcon = document.getElementById('volumeIcon');
+  const iosWarning = document.getElementById('iosWarning');
+  const nowPlaying = document.getElementById('nowPlaying');
 
-    const bitrates = {
-      'antenaplay': '128 kb/s',
-      'magicfm': '128 kb/s',
-      'kissfm': '128 kb/s',
-      'rockfm': '96 kb/s',
-      'playradio': '256 kb/s',
-      'radioprob': '192 kb/s',
-      'folkbg': '320 kb/s',
-      'digi24': '128 kb/s',
-      'edi.ro': '128 kb/s'
-    };
+  const bitrates = {
+    'antenaplay': '128 kb/s',
+    'magicfm': '128 kb/s',
+    'kissfm': '128 kb/s',
+    'rockfm': '96 kb/s',
+    'playradio': '256 kb/s',
+    'radioprob': '192 kb/s',
+    'folkbg': '320 kb/s',
+    'digi24': '128 kb/s',
+    'edi.ro': '128 kb/s'
+  };
 
-    // ======= iOS Detection =========
-    // DOAR ODATĂ! Nu e duplicat
-    const isIOS = /iPad|iPhone|iPod/i.test(navigator.userAgent) && !window.MSStream;
-    if (isIOS) {
-      document.querySelector('.volume-controls').style.display = 'none';
-      iosWarning.style.display = 'block';
+  // Endpoint-uri pentru "now playing" (doar pt ce posturi permite)
+  const nowPlayingAPIs = {
+    'kissfm': 'https://live.kissfm.ro/status-json.xsl',
+    'rockfm': 'https://live.rockfm.ro:8443/status-json.xsl'
+    // Poți extinde aici când găsești și alte endpointuri
+  };
+
+  // Text standard pentru posturile fără Now Playing
+  const notAvailableMsg = "🎵 Now Playing: Nu este disponibil pentru acest post de radio";
+
+  // ======= iOS Detection =========
+  const isIOS = /iPad|iPhone|iPod/i.test(navigator.userAgent) && !window.MSStream;
+  if (isIOS) {
+    document.querySelector('.volume-controls').style.display = 'none';
+    iosWarning.style.display = 'block';
+  }
+
+  // ================== FUNCS =====================
+  function updateStatus(msg) {
+    status.textContent = msg;
+  }
+
+  function updateLogo(url) {
+    let logo = '';
+    if (url.includes('antenaplay')) logo = 'logos/radio_zu.png';
+    else if (url.includes('magicfm')) logo = 'logos/magic_fm.png';
+    else if (url.includes('kissfm')) logo = 'logos/kiss_fm.png';
+    else if (url.includes('rockfm')) logo = 'logos/rock_fm.png';
+    else if (url.includes('playradio')) logo = 'logos/play_radio.png';
+    else if (url.includes('radioprob')) logo = 'logos/radioprob.png';
+    else if (url.includes('folkbg')) logo = 'logos/folkbg.png';
+    else if (url.includes('digi24')) logo = 'logos/digi24.png';
+    else if (url.includes('edi.ro')) logo = 'logos/europafm.png';
+    else logo = 'logos/image.png';
+    stationLogo.src = logo;
+    stationLogo.style.display = 'block';
+  }
+
+  function updateBitrate(url) {
+    const key = Object.keys(bitrates).find(k => url.includes(k));
+    bitrateDisplay.textContent = key ? `📶 Bitrate: ${bitrates[key]}` : '📶 Bitrate: ?';
+  }
+
+  // ================= NOW PLAYING =================
+  let nowPlayingInterval = null;
+
+  function getStationApiKey(url) {
+    // Returnează cheia din nowPlayingAPIs dacă url-ul corespunde
+    return Object.keys(nowPlayingAPIs).find(k => url.includes(k)) || null;
+  }
+
+  function fetchNowPlaying(url) {
+    const key = getStationApiKey(url);
+    if (!key) {
+      nowPlaying.textContent = notAvailableMsg;
+      return;
     }
-
-    // ======== FUNCȚII SUPPORT ========
-    function updateStatus(msg) {
-      status.textContent = msg;
-    }
-
-    function updateLogo(url) {
-      let logo = '';
-      if (url.includes('antenaplay')) logo = 'logos/radio_zu.png';
-      else if (url.includes('magicfm')) logo = 'logos/magic_fm.png';
-      else if (url.includes('kissfm')) logo = 'logos/kiss_fm.png';
-      else if (url.includes('rockfm')) logo = 'logos/rock_fm.png';
-      else if (url.includes('playradio')) logo = 'logos/play_radio.png';
-      else if (url.includes('radioprob')) logo = 'logos/radioprob.png';
-      else if (url.includes('folkbg')) logo = 'logos/folkbg.png';
-      else if (url.includes('digi24')) logo = 'logos/digi24.png';
-      else if (url.includes('edi.ro')) logo = 'logos/europafm.png';
-      else logo = 'logos/image.png';
-      stationLogo.src = logo;
-      stationLogo.style.display = 'block';
-    }
-
-    function updateBitrate(url) {
-      const key = Object.keys(bitrates).find(k => url.includes(k));
-      bitrateDisplay.textContent = key ? `📶 Bitrate: ${bitrates[key]}` : '📶 Bitrate: ?';
-    }
-
-    // ======== INIT PLAYER ========
-    function initPlayer() {
-      const url = stationSelector.value;
-      radioPlayer.src = url;
-      updateLogo(url);
-      updateBitrate(url);
-      updateStatus('🔄 Se încarcă...');
-      nowPlaying.textContent = '🎵 Now Playing: ...';
-      radioPlayer.play().then(() => updateStatus('✅ Redare în curs.')).catch(() => updateStatus('❌ Eroare la redare.'));
-    }
-
-    // ======== Navigare posturi precedent/urmator ======
-    function changeStation(newIndex) {
-      stationSelector.selectedIndex = newIndex;
-      initPlayer();
-      localStorage.setItem('lastStation', stationSelector.value);
-    }
-
-    document.getElementById('prevStation').addEventListener('click', () => {
-      const total = stationSelector.options.length;
-      const index = (stationSelector.selectedIndex - 1 + total) % total;
-      changeStation(index);
-    });
-
-    document.getElementById('nextStation').addEventListener('click', () => {
-      const total = stationSelector.options.length;
-      const index = (stationSelector.selectedIndex + 1) % total;
-      changeStation(index);
-    });
-
-    stationSelector.addEventListener('change', () => {
-      initPlayer();
-      localStorage.setItem('lastStation', stationSelector.value);
-    });
-
-    // ======= Volume Control (nu pe iOS) ========
-    volumeSlider.addEventListener('input', () => {
-      radioPlayer.volume = volumeSlider.value;
-      volumeIcon.textContent = radioPlayer.volume == 0 ? '🔇' : '🔊';
-    });
-
-    // ===== TEMA dark/light =====
-    toggleThemeBtn.addEventListener('click', () => {
-      document.body.classList.toggle('dark');
-      toggleThemeBtn.textContent = document.body.classList.contains('dark') ? '☀️ Trecere la light mode' : '🌙 Trecere la dark mode';
-      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-    });
-
-    // ===== Service Worker registration =====
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker
-          .register('sw.js')
-          .then(reg => console.log('✔️ Service Worker registered:', reg))
-          .catch(err => console.error('❌ Service Worker error:', err));
-      });
-    }
-
-    // ===== On DOM load: load theme, station, set fallback dacă nu există =====
-    window.addEventListener('DOMContentLoaded', () => {
-      const savedStation = localStorage.getItem('lastStation');
-      const savedTheme = localStorage.getItem('theme');
-      // fallback: dacă savedStation nu există în listă, setează pe primul
-      let foundStation = false;
-      if (savedStation) {
-        for (let i = 0; i < stationSelector.options.length; i++) {
-          if (stationSelector.options[i].value === savedStation) {
-            stationSelector.selectedIndex = i;
-            foundStation = true;
-            break;
+    fetch(nowPlayingAPIs[key])
+      .then(r => r.json())
+      .then(data => {
+        let title = '';
+        // Icecast: source poate fi array dacă serverul livrează mai multe mount points
+        if (data.icestats && data.icestats.source) {
+          if (Array.isArray(data.icestats.source)) {
+            title = data.icestats.source[0].title || '';
+          } else if (typeof data.icestats.source === "object" && data.icestats.source.title) {
+            title = data.icestats.source.title;
           }
         }
-      }
-      if (!foundStation) stationSelector.selectedIndex = 0;
+        if (title && title.trim()) {
+          nowPlaying.textContent = `🎵 Now Playing: ${title}`;
+        } else {
+          nowPlaying.textContent = "🎵 Now Playing: -";
+        }
+      })
+      .catch(() => {
+        nowPlaying.textContent = notAvailableMsg;
+      });
+  }
 
-      if (savedTheme === 'dark') {
-        document.body.classList.add('dark');
-        toggleThemeBtn.textContent = '☀️ Trecere la light mode';
-      } else {
-        document.body.classList.remove('dark');
-        toggleThemeBtn.textContent = '🌙 Trecere la dark mode';
-      }
-      initPlayer();
-      if (!isIOS) radioPlayer.volume = volumeSlider.value;
+  function startNowPlayingUpdater(url) {
+    if (nowPlayingInterval) clearInterval(nowPlayingInterval);
+    fetchNowPlaying(url);
+    const key = getStationApiKey(url);
+    // Refacem update doar la posturile care furnizează now playing
+    if (key) {
+      nowPlayingInterval = setInterval(() => {
+        fetchNowPlaying(stationSelector.value);
+      }, 20000); // update la 20 secunde
+    }
+  }
+
+  // ================== INIT PLAYER ====================
+  function initPlayer() {
+    const url = stationSelector.value;
+    radioPlayer.src = url;
+    updateLogo(url);
+    updateBitrate(url);
+    updateStatus('🔄 Se încarcă...');
+    startNowPlayingUpdater(url);
+    radioPlayer.play().then(() => updateStatus('✅ Redare în curs.')).catch(() => updateStatus('❌ Eroare la redare.'));
+  }
+
+  // ================== Navigare prev/next =============
+  function changeStation(newIndex) {
+    stationSelector.selectedIndex = newIndex;
+    initPlayer();
+    localStorage.setItem('lastStation', stationSelector.value);
+  }
+
+  document.getElementById('prevStation').addEventListener('click', () => {
+    const total = stationSelector.options.length;
+    const index = (stationSelector.selectedIndex - 1 + total) % total;
+    changeStation(index);
+  });
+
+  document.getElementById('nextStation').addEventListener('click', () => {
+    const total = stationSelector.options.length;
+    const index = (stationSelector.selectedIndex + 1) % total;
+    changeStation(index);
+  });
+
+  stationSelector.addEventListener('change', () => {
+    initPlayer();
+    localStorage.setItem('lastStation', stationSelector.value);
+  });
+
+  // ============ Volume Control (nu pe iOS) ============
+  volumeSlider.addEventListener('input', () => {
+    radioPlayer.volume = volumeSlider.value;
+    volumeIcon.textContent = radioPlayer.volume == 0 ? '🔇' : '🔊';
+  });
+
+  // ============ Tema light/dark =======================
+  toggleThemeBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    toggleThemeBtn.textContent = document.body.classList.contains('dark') ? '☀️ Trecere la light mode' : '🌙 Trecere la dark mode';
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+  });
+
+  // =========== Service Worker =========================
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker
+        .register('sw.js')
+        .then(reg => console.log('✔️ Service Worker registered:', reg))
+        .catch(err => console.error('❌ Service Worker error:', err));
     });
+  }
 
-    // ===== Evenimente media player =======
-    radioPlayer.addEventListener('waiting', () => updateStatus('🔄 Se încarcă...'));
-    radioPlayer.addEventListener('error', () => updateStatus('❌ Eroare la redare.'));
-    radioPlayer.addEventListener('playing', () => updateStatus('✅ Redare în curs.'));
+  // ==== INIT after DOM load: fallback, theme, etc =====
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedStation = localStorage.getItem('lastStation');
+    const savedTheme = localStorage.getItem('theme');
+    let foundStation = false;
+    if (savedStation) {
+      for (let i = 0; i < stationSelector.options.length; i++) {
+        if (stationSelector.options[i].value === savedStation) {
+          stationSelector.selectedIndex = i;
+          foundStation = true;
+          break;
+        }
+      }
+    }
+    if (!foundStation) stationSelector.selectedIndex = 0;
 
-    
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark');
+      toggleThemeBtn.textContent = '☀️ Trecere la light mode';
+    } else {
+      document.body.classList.remove('dark');
+      toggleThemeBtn.textContent = '🌙 Trecere la dark mode';
+    }
+    initPlayer();
+    if (!isIOS) radioPlayer.volume = volumeSlider.value;
+  });
 
-  </script>
+  // === Audio status ===
+  radioPlayer.addEventListener('waiting', () => updateStatus('🔄 Se încarcă...'));
+  radioPlayer.addEventListener('error', () => updateStatus('❌ Eroare la redare.'));
+  radioPlayer.addEventListener('playing', () => updateStatus('✅ Redare în curs.'));
+
+</script>
 </body>
 </html>
