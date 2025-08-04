@@ -388,7 +388,7 @@
     updateBitrate(url);
     updateStatus('🔄 Loading...');
     startNowPlayingUpdater(url);
-    radioPlayer.play().then(() => updateStatus('✅ Playing')).catch(() => updateStatus('❌ Error Playing'));
+    radioPlayer.play().then(() => updateStatus('✅ Playing...')).catch(() => updateStatus('❌ Error Playing'));
   }
 
   // ================== Navigare prev/next =============
@@ -424,7 +424,7 @@
   // ============ Tema light/dark =======================
   toggleThemeBtn.addEventListener('click', () => {
     document.body.classList.toggle('dark');
-    toggleThemeBtn.textContent = document.body.classList.contains('dark') ? '☀️ Trecere la light mode' : '🌙 Trecere la dark mode';
+    toggleThemeBtn.textContent = document.body.classList.contains('dark') ? '☀️ Switch to light mode' : '🌙 Switch to dark mode';
     localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
   });
 
@@ -456,10 +456,10 @@
 
     if (savedTheme === 'dark') {
       document.body.classList.add('dark');
-      toggleThemeBtn.textContent = '☀️ Trecere la light mode';
+      toggleThemeBtn.textContent = '☀️ Switch to light mode';
     } else {
       document.body.classList.remove('dark');
-      toggleThemeBtn.textContent = '🌙 Trecere la dark mode';
+      toggleThemeBtn.textContent = '🌙 Switch to dark mode';
     }
     initPlayer();
     if (!isIOS) radioPlayer.volume = volumeSlider.value;
@@ -468,7 +468,7 @@
   // === Audio status ===
   radioPlayer.addEventListener('waiting', () => updateStatus('🔄 Loading...'));
   radioPlayer.addEventListener('error', () => updateStatus('❌ Error Playing'));
-  radioPlayer.addEventListener('playing', () => updateStatus('✅ Playing'));
+  radioPlayer.addEventListener('playing', () => updateStatus('✅ Playing...'));
 
 </script>
 </body>
