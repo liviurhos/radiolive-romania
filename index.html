@@ -1,491 +1,342 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="Radio Live România/UK - Ascultă posturi live FM și online, inclusiv Europa FM, Kiss FM, Radio ZU, Magic FM și altele. Totul într-o singură pagină, ușor de folosit." />
-  <meta name="keywords" content="radio live România, ascultă radio online, Europa FM, Kiss FM, Radio ZU, Rock FM, Magic FM, manele, folk, 90s radio" />
-  <meta name="author" content="LAARB™ Studio Production" />
-  <title>Radio Live România/UK - Ascultă online posturi live FM și digital</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <link rel="icon" href="favicon.png" type="image/png">
-  <link rel="apple-touch-icon" href="favicon.png">
-  <style>
-    :root {
-      --bg-light: #f0f0f0;
-      --text-light: #222;
-      --card-light: #99ffd6;
-      --bg-dark: #1e1e1e;
-      --text-dark: #e0e0e0;
-      --card-dark: #2b2b2b;
-    }
-    body {
-      font-family: 'Segoe UI', 'Segoe UI Emoji', 'Apple Color', sans-serif;
-      background-color: #4da6ff;
-      color: var(--text-light);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      letter-spacing: 0;
-      word-spacing: 0;
-      min-height: 100vh;
-      margin: 0;
-      transition: background 0.3s, color 0.3s;
-    }
-    body.dark {
-      background-color: var(--bg-dark);
-      color: var(--text-dark);
-    }
-    .card {
-      background-color: var(--card-light);
-      padding: 0.6em 1em;
-      border-radius: 16px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-      max-width: 600px;
-      width: 100%;
-      text-align: center;
-      transition: background 0.3s;
-    }
-    body.dark .card {
-      background-color: var(--card-dark);
-    }
-    h1, .status, .bitrate {
-      font-size: 1.8em;
-      font-weight: 600;
-      margin-bottom: 0.3em;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.1em;
-    }
-    .icon {
-      font-size: 1.6em;
-      animation: pulse 1.8s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.15); opacity: 0.8; }
-    }
-    .title {
-      background: linear-gradient(45deg, #1976d2, #42a5f5);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-    }
-    label {
-      font-weight: bold;
-      font-size: 1.1em;
-      display: block;
-      margin-bottom: 0.3em;
-    }
-    select {
-      width: 100%;
-      padding: 0.6em;
-      font-size: 1em;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      margin-bottom: 1.2em;
-      transition: border 0.3s;
-    }
-    select:focus {
-      border-color: #2196f3;
-      outline: none;
-    }
-    audio {
-      width: 100%;
-      margin-top: 1em;
-    }
-    @media (max-width: 600px) {
-      audio {
-        height: 60px;
-      }
-    }
-    audio::-webkit-media-controls-play-button {
-      transform: scale(1.5);
-    }
-    #stationLogo {
-      width: 100px;
-      height: 96px;
-      object-fit: contain;
-      margin: 1em auto;
-      display: none;
-    }
-    .bitrate {
-      margin-top: 0.5em;
-      font-size: 1.2em;
-      color: #000000;
-      opacity: 0.8;
-    }
-    .status {
-      margin-top: 0.5em;
-      font-size: 1.2em;
-      opacity: 0.8;
-    }
-    .toggle-theme {
-      margin-top: 1em;
-      cursor: pointer;
-      background: none;
-      border: none;
-      font-size: 1.2em;
-      color: #2196f3;
-    }
-    .toggle-theme:hover {
-      color: #1976d2;
-    }
-    .volume-controls {
-      display: flex;
-      align-items: center;
-      gap: 0.2em;
-      margin-top: 1em;
-    }
-    .volume-controls input[type="range"] {
-      flex: 1;
-    }
-    .nav-buttons {
-      display: flex;
-      justify-content: space-between;
-      margin: 1em 0 0.3em;
-      gap: 1em;
-    }
-    .nav-buttons button {
-      background: black;
-      border: none;
-      padding: 0;
-      margin: 0;
-      cursor: pointer;
-      border-radius: 10px;
-      transition: transform 0.2s, background 0.2s;
-      width: 90px;
-      height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .nav-buttons button:focus {
-      outline: 2px solid #1976d2;
-      outline-offset: 2px;
-    }
-    .nav-buttons button:hover {
-      background: #4293f5;
-      transform: scale(1.08);
-    }
-    body.dark .nav-buttons button:hover {
-      background: rgba(200,220,250,0.05);
-    }
-    .nav-buttons svg {
-      display: block;
-      width: 56px;
-      height: 34px;
-    }
-    .nav-buttons button:active svg polygon,
-    .nav-buttons button:active svg rect.line {
-      fill: #0d47a1;
-    }
-    footer {
-      margin-top: 2em;
-      font-size: 1.2em;
-      text-align: center;
-      color: black;
-      opacity: 1;
-    }
-    body.dark footer {
-      color: #ccc;
-    }
-    #footerText { color: inherit; }
-    body.dark #footerText { color: inherit; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Radio Live Romania/UK - Listen to FM & online stations with live now playing and logos automatically loaded." />
+<title>Radio Live Romania/UK - Online Radio Player</title>
+<link rel="icon" href="favicon.png" type="image/png" />
+<style>
+  :root {
+    --bg-light: #f0f0f0;
+    --text-light: #222;
+    --card-light: #99ffd6;
+    --bg-dark: #1e1e1e;
+    --text-dark: #e0e0e0;
+    --card-dark: #2b2b2b;
+  }
+  body {
+    font-family: 'Segoe UI', 'Segoe UI Emoji', 'Apple Color', sans-serif;
+    background: #4da6ff;
+    color: var(--text-light);
+    min-height: 100vh;
+    margin: 0; display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.3s, color 0.3s;
+  }
+  .card {
+    background: var(--card-light);
+    padding: 1.1em 1.2em;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.14);
+    max-width: 540px; width: 100%;
+    text-align: center;
+    transition: background 0.3s;
+  }
+  body.dark { background: var(--bg-dark); color: var(--text-dark);}
+  body.dark .card { background: var(--card-dark);}
+  h1, .status, .bitrate {
+    font-size: 1.5em;
+    font-weight: 600;
+    margin-bottom: 0.3em;
+    display: flex;
+    align-items: center;
+    justify-content: center; gap: 0.12em;
+  }
+  .icon {font-size: 1.65em; animation: pulse 1.8s infinite;}
+  @keyframes pulse {0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.11);opacity:.83;}}
+  .title {background: linear-gradient(45deg,#1976d2,#42a5f5);-webkit-background-clip: text;-webkit-text-fill-color: transparent;}
+  label { font-weight: bold;font-size: 1.1em; display: block; margin-bottom: 0.3em;}
+  select {width: 100%;padding: 0.6em;font-size: 1em;border-radius: 8px;border: 1px solid #ccc; margin-bottom: 1.1em;}
+  select:focus {border-color: #2196f3;outline: none;}
+  audio {width: 100%; margin-top: 1em;}
+  #stationLogo {
+    width: 96px; height: 96px;
+    object-fit: contain;
+    margin: 1em auto;
+    display: none;
+    border-radius: 12px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.15);
+  }
+  .bitrate {margin-top: 0.5em;font-size: 1.07em;color:#075; opacity: 0.88;}
+  .status {margin-top: 0.45em;font-size: 1.05em; opacity: 0.89;}
+  .toggle-theme {margin-top: 1em; cursor: pointer; background: none; border: none; font-size:1.1em; color:#2196f3;}
+  .toggle-theme:hover { color: #1976d2;}
+  .volume-controls {display:flex; align-items:center; gap:0.2em;margin-top:1em;}
+  .volume-controls input[type="range"] {flex:1;}
+  .nav-buttons {display:flex;justify-content:space-between;margin:1em 0 0.3em;gap:1em;}
+  .nav-buttons button {background:black; border:none; border-radius:10px;cursor:pointer;height:44px;width:74px;display:flex;align-items:center;justify-content:center;}
+  .nav-buttons button:focus {outline:2px solid #1976d2;}
+  .nav-buttons button:hover {background: #4293f5;}
+  .nav-buttons svg {width:46px;height:24px;}
+  body.dark .nav-buttons button:hover {background:rgba(200,220,250,0.07);}
+  footer {margin-top:2em;font-size:1em;text-align:center;color:black;}
+  body.dark footer { color: #ccc;}
+  #footerText {color: inherit;}
+  [aria-live] { font-weight: 500; }
+  @media (prefers-color-scheme: dark) {
+    body:not(.light) {background: #1e1e1e; color: #e0e0e0;}
+    .card {background: #2b2b2b;}
+    footer {color: #ccc;}
+  }
+  .warning {color:#c00; font-weight:600;}
+</style>
 </head>
 <body>
   <div class="card">
     <h1>
       <span class="icon">📻</span>
-      <span class="title">Radio Live România/UK</span>
+      <span class="title">Radio Live Romania/UK</span>
     </h1>
-
-    <label for="stationSelector">Select a radio station from the list below:</label>
-    <select id="stationSelector">
-      <option value="https://live.kissfm.ro/kissfm.aacp">Kiss FM (RO)</option>
-      <option value="https://ivm.antenaplay.ro/liveaudio/radiozu/playlist.m3u8">Radio ZU (RO)</option>
-      <option value="https://live.playradio.org:8443/90HD">Play Radio Constanța - 90's (RO)</option>
-      <option value="https://live.radioprob.ro:8888/;">Radio ProB (RO)</option>
-      <option value="https://edge126.rcs-rds.ro/digifm/digi24fm.mp3">Digi 24 (RO)</option>
-      <option value="https://astreaming.edi.ro:8443/EuropaFM_aac">Europa FM (RO)</option>
-      <option value="https://live.magicfm.ro/magicfm.aacp">Magic FM (RO)</option>
-      <option value="https://live.rockfm.ro:8443/rockfm.aacp">Rock FM (RO)</option>
-      <option value="http://listen.folkbg.net:8001/folkbg">Radio FolkBG (BG)</option>
-      <option value="http://stream.fred.fm:8888/;">Radio Manele Petrecere (RO)</option>
-      <option value="https://ice-sov.musicradio.com/CapitalCymru">Capital FM (UK)</option>
-      <option value="https://ice-sov.musicradio.com/CapitalDanceMP3 ">Capital Dance (UK)</option>
-      <option value="https://ice-sov.musicradio.com/GoldMP3">Gold (UK)</option>
-      <option value="https://icecast.thisisdax.com/Heart00sMP3 ">Heart 00s (UK)</option>
-      <option value="https://ice-sov.musicradio.com/SmoothChillMP3">Smooth Chill (UK)</option>
-      <option value="https://ice-sov.musicradio.com/Heart90sMP3">Heart 90s (UK)</option>
-      <option value="https://icecast.thisisdax.com/HeartDanceMP3">Heart Dance (UK)</option>
-      <option value"https://radio.virginradio.co.uk/stream">Virgin Radio (UK)</option>
-    </select>
-
-    <img id="stationLogo" src="" alt="Logo radio" />
-
+    <label for="stationSelector">Select a radio station:</label>
+    <select id="stationSelector"></select>
+    <div id="stationWarning" class="warning" style="display:none"></div>
+    <img id="stationLogo" src="" alt="Radio station logo" />
     <div class="bitrate" id="bitrateDisplay">📶 Bitrate: ?</div>
-
     <div class="volume-controls">
       <span>🔇</span>
       <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1" />
       <span id="volumeIcon">🔊</span>
     </div>
-
-    <p id="iosWarning" style="display: none; font-size: 0.9em; color: #c00; margin-top: 0.5em;">
-      ⚠️ Controlul volumului nu este disponibil pe iPhone. Folosește butoanele laterale ale telefonului.<br>
-      ⚠️ The volume control is not available on iPhone. Use the phone's volume buttons.
+    <p id="iosWarning" style="display:none;font-size:0.88em;color:#c00;margin-top:0.7em;">
+      ⚠️ Volume control is unavailable on iPhone. Use the physical volume buttons.
     </p>
-
     <audio id="radioPlayer" controls autoplay></audio>
-
     <div class="nav-buttons">
-      <!-- PREV STATION SVG -->
       <button id="prevStation" title="Previous station" aria-label="Previous station">
-        <svg viewBox="0 0 56 34" fill="none" aria-hidden="false" focusable="false" xmlns="http://www.w3.org/2000/svg">
-          <title>Postul anterior</title>
-          <rect class="line" x="8" y="7" width="4" height="20" rx="2" fill="white"/>
-          <polygon points="26,7 10,17 26,27" fill="white"/>
-          <polygon points="39,7 23,17 39,27" fill="white"/>
-        </svg>
+        <svg viewBox="0 0 56 34"><rect x="8" y="7" width="4" height="20" rx="2" fill="white"/><polygon points="26,7 10,17 26,27" fill="white"/><polygon points="39,7 23,17 39,27" fill="white"/></svg>
       </button>
-      <!-- NEXT STATION SVG -->
-      <button id="nextStation" title="Next Radio Station" aria-label="Next Radio Station">
-        <svg viewBox="0 0 56 34" fill="none" aria-hidden="false" focusable="false" xmlns="http://www.w3.org/2000/svg">
-          <title>Postul următor</title>
-          <rect class="line" x="44" y="7" width="4" height="20" rx="2" fill="white"/>
-          <polygon points="30,7 46,17 30,27" fill="white"/>
-          <polygon points="17,7 33,17 17,27" fill="white"/>
-        </svg>
+      <button id="nextStation" title="Next station" aria-label="Next station">
+        <svg viewBox="0 0 56 34"><rect x="44" y="7" width="4" height="20" rx="2" fill="white"/><polygon points="30,7 46,17 30,27" fill="white"/><polygon points="17,7 33,17 17,27" fill="white"/></svg>
       </button>
     </div>
-
-    <div id="status" class="status">🔄 Loading...</div>
-    <div id="nowPlaying" class="status">🎵 Now Playing: ...</div>
-    <button class="toggle-theme" id="toggleTheme">🌙 Trecere la dark mode</button>
+    <div id="status" class="status" aria-live="polite"></div>
+    <div id="nowPlaying" class="status" aria-live="polite"></div>
+    <button class="toggle-theme" id="toggleTheme"></button>
     <footer>
       <span id="footerText">Powered by LAARB™ STUDIO PRODUCTION</span>
     </footer>
   </div>
 
 <script>
-  // ================== CONFIG ===================
-  const stationSelector = document.getElementById('stationSelector');
-  const radioPlayer = document.getElementById('radioPlayer');
-  const status = document.getElementById('status');
-  const toggleThemeBtn = document.getElementById('toggleTheme');
-  const stationLogo = document.getElementById('stationLogo');
-  const bitrateDisplay = document.getElementById('bitrateDisplay');
-  const volumeSlider = document.getElementById('volumeSlider');
-  const volumeIcon = document.getElementById('volumeIcon');
-  const iosWarning = document.getElementById('iosWarning');
-  const nowPlaying = document.getElementById('nowPlaying');
+const stations = [
+  { name: "Kiss FM (RO)", url: "https://live.kissfm.ro/kissfm.aacp", bitrate: "128 kb/s", fallbackLogo: "logos/kiss_fm.png" },
+  { name: "Radio ZU (RO)", url: "http://zuicast.digitalag.ro:9420/zu", bitrate: "128 kb/s", fallbackLogo: "logos/radio_zu.png" },
+  { name: "Play Radio Constanța - 90's (RO)", url: "https://live.playradio.org:8443/90HD", bitrate: "256 kb/s", fallbackLogo: "logos/play_radio.png" },
+  { name: "Radio ProB (RO)", url: "https://live.radioprob.ro:8888/;", bitrate: "192 kb/s", fallbackLogo: "logos/radioprob.png" },
+  { name: "Digi 24 (RO)", url: "https://edge126.rcs-rds.ro/digifm/digi24fm.mp3", bitrate: "128 kb/s", fallbackLogo: "logos/digi24.png" },
+  { name: "Europa FM (RO)", url: "https://astreaming.edi.ro:8443/EuropaFM_aac", bitrate: "128 kb/s", fallbackLogo: "logos/europafm.png" },
+  { name: "Magic FM (RO)", url: "https://live.magicfm.ro/magicfm.aacp", bitrate: "128 kb/s", fallbackLogo: "logos/magic_fm.png" },
+  { name: "Rock FM (RO)", url: "https://live.rockfm.ro:8443/rockfm.aacp", bitrate: "128 kb/s", fallbackLogo: "logos/rock_fm.png" },
+  { name: "Radio FolkBG (BG)", url: "http://listen.folkbg.net:8001/folkbg", bitrate: "320 kb/s", fallbackLogo: "logos/folkbg.png" },
+  { name: "Radio Manele Petrecere (RO)", url: "http://stream.fred.fm:8888/;", bitrate: "128 kb/s", fallbackLogo: "logos/image.png" },
+  { name: "Capital FM (UK)", url: "https://ice-sov.musicradio.com/CapitalCymru", bitrate: "128 kb/s", fallbackLogo: "logos/image.png" },
+  { name: "Capital Dance (UK)", url: "https://ice-sov.musicradio.com/CapitalDanceMP3", bitrate: "128 kb/s", fallbackLogo: "logos/image.png" },
+  { name: "Gold (UK)", url: "https://ice-sov.musicradio.com/GoldMP3", bitrate: "128 kb/s", fallbackLogo: "logos/image.png" },
+  { name: "Heart 00s (UK)", url: "https://icecast.thisisdax.com/Heart00sMP3", bitrate: "128 kb/s", fallbackLogo: "logos/image.png" },
+  { name: "Smooth Chill (UK)", url: "https://ice-sov.musicradio.com/SmoothChillMP3", bitrate: "128 kb/s", fallbackLogo: "logos/image.png" },
+  { name: "Heart 90s (UK)", url: "https://ice-sov.musicradio.com/Heart90sMP3", bitrate: "128 kb/s", fallbackLogo: "logos/image.png" },
+  { name: "Heart Dance (UK)", url: "https://icecast.thisisdax.com/HeartDanceMP3", bitrate: "128 kb/s", fallbackLogo: "logos/image.png" },
+  { name: "Virgin Radio (UK)", url: "https://radio.virginradio.co.uk/stream", bitrate: "320 kb/s", fallbackLogo: "logos/image.png" }
+];
 
-  const bitrates = {
-    'antenaplay': '128 kb/s',
-    'magicfm': '128 kb/s',
-    'kissfm': '128 kb/s',
-    'rockfm': '96 kb/s',
-    'playradio': '256 kb/s',
-    'radioprob': '192 kb/s',
-    'folkbg': '320 kb/s',
-    'digi24': '128 kb/s',
-    'edi.ro': '128 kb/s',
-    'CapitalCymru': '128 kb/s',
-    'CapitalDance': '128 kb/s',
-    'Gold': '128 kb/s',
-    'Heart00s': '128 kb/s',
-    'SmoothChill': '128 kb/s',
-    'Heart90s': '128 kb/s',
-    'HeartDance': '128 kb/s',
-    'virginradio': '128 kb/s'
-  };
+const stationSelector = document.getElementById('stationSelector');
+const radioPlayer = document.getElementById('radioPlayer');
+const status = document.getElementById('status');
+const toggleThemeBtn = document.getElementById('toggleTheme');
+const stationLogo = document.getElementById('stationLogo');
+const bitrateDisplay = document.getElementById('bitrateDisplay');
+const volumeSlider = document.getElementById('volumeSlider');
+const volumeIcon = document.getElementById('volumeIcon');
+const iosWarning = document.getElementById('iosWarning');
+const nowPlaying = document.getElementById('nowPlaying');
+const prevStationBtn = document.getElementById('prevStation');
+const nextStationBtn = document.getElementById('nextStation');
+const stationWarning = document.getElementById('stationWarning');
 
-  // Endpoint-uri pentru "now playing" (doar pt ce posturi permite)
-  const nowPlayingAPIs = {
-    'kissfm': 'https://live.kissfm.ro/status-json.xsl',
-    'rockfm': 'https://live.rockfm.ro:8443/status-json.xsl'
-    // Poți extinde aici când găsești și alte endpointuri
-  };
+let nowPlayingInterval = null;
 
-  // Text standard pentru posturile fără Now Playing
-  const notAvailableMsg = "🎵 Now Playing: Not available for this radio station";
+/**
+ * Fill dropdown with station names
+ */
+function fillStationList() {
+  stationSelector.innerHTML = stations.map((s,i) =>
+    `<option value="${i}">${s.name}</option>`
+  ).join('');
+}
 
-  // ======= iOS Detection =========
-  const isIOS = /iPad|iPhone|iPod/i.test(navigator.userAgent) && !window.MSStream;
-  if (isIOS) {
-    document.querySelector('.volume-controls').style.display = 'none';
-    iosWarning.style.display = 'block';
-  }
+/**
+ * Returns current selected station object
+ */
+function getStation() {
+  return stations[parseInt(stationSelector.value,10)] || stations[0];
+}
 
-  // ================== FUNCS =====================
-  function updateStatus(msg) {
-    status.textContent = msg;
-  }
-
-  function updateLogo(url) {
-    let logo = '';
-    if (url.includes('antenaplay')) logo = 'logos/radio_zu.png';
-    else if (url.includes('magicfm')) logo = 'logos/magic_fm.png';
-    else if (url.includes('kissfm')) logo = 'logos/kiss_fm.png';
-    else if (url.includes('rockfm')) logo = 'logos/rock_fm.png';
-    else if (url.includes('playradio')) logo = 'logos/play_radio.png';
-    else if (url.includes('radioprob')) logo = 'logos/radioprob.png';
-    else if (url.includes('folkbg')) logo = 'logos/folkbg.png';
-    else if (url.includes('digi24')) logo = 'logos/digi24.png';
-    else if (url.includes('edi.ro')) logo = 'logos/europafm.png';
-    else logo = 'logos/image.png';
-    stationLogo.src = logo;
-    stationLogo.style.display = 'block';
-  }
-
-  function updateBitrate(url) {
-    const key = Object.keys(bitrates).find(k => url.includes(k));
-    bitrateDisplay.textContent = key ? `📶 Bitrate: ${bitrates[key]}` : '📶 Bitrate: ?';
-  }
-
-  // ================= NOW PLAYING =================
-  let nowPlayingInterval = null;
-
-  function getStationApiKey(url) {
-    // Returnează cheia din nowPlayingAPIs dacă url-ul corespunde
-    return Object.keys(nowPlayingAPIs).find(k => url.includes(k)) || null;
-  }
-
-  function fetchNowPlaying(url) {
-    const key = getStationApiKey(url);
-    if (!key) {
-      nowPlaying.textContent = notAvailableMsg;
-      return;
+/**
+ * Fetch logo URL from Radio Browser API by station name
+ * Fallback to local logo if fail or no logo found
+ */
+async function fetchStationLogo(stationName, fallback) {
+  try {
+    const corsProxy = 'https://corsproxy.io/?';
+    const apiUrl = corsProxy + `https://de1.api.radio-browser.info/json/stations/search?name=${encodeURIComponent(stationName)}&limit=1`;
+    const res = await fetch(apiUrl);
+    if (!res.ok) throw new Error("API err");
+    const data = await res.json();
+    if (data && data[0] && data[0].favicon && data[0].favicon.startsWith('http')) {
+      return data[0].favicon;
     }
-    fetch(nowPlayingAPIs[key])
-      .then(r => r.json())
-      .then(data => {
-        let title = '';
-        // Icecast: source poate fi array dacă serverul livrează mai multe mount points
-        if (data.icestats && data.icestats.source) {
-          if (Array.isArray(data.icestats.source)) {
-            title = data.icestats.source[0].title || '';
-          } else if (typeof data.icestats.source === "object" && data.icestats.source.title) {
-            title = data.icestats.source.title;
-          }
-        }
-        if (title && title.trim()) {
-          nowPlaying.textContent = `🎵 Now Playing: ${title}`;
-        } else {
-          nowPlaying.textContent = "🎵 Now Playing: -";
-        }
-      })
-      .catch(() => {
-        nowPlaying.textContent = notAvailableMsg;
-      });
+  } catch (e) {
+    // console.warn("Logo fetch error", e);
+  }
+  return fallback;
+}
+
+
+/**
+ * Update station logo with fetched or fallback
+ */
+async function updateLogo(station) {
+  const logoUrl = await fetchStationLogo(station.name, station.fallbackLogo);
+  stationLogo.src = logoUrl;
+  stationLogo.alt = "Logo " + station.name;
+  stationLogo.style.display = 'block';
+}
+
+/**
+ * Update bitrate display
+ */
+function updateBitrate(station) {
+  bitrateDisplay.textContent = `📶 Bitrate: ${station.bitrate || "?"}`;
+}
+
+/**
+ * Update status message
+ */
+function updateStatus(msg) {
+  status.textContent = msg;
+}
+
+/**
+ * Show or hide warnings
+ */
+function displayWarning(message) {
+  if (message) {
+    stationWarning.style.display = 'block';
+    stationWarning.textContent = message;
+  } else {
+    stationWarning.style.display = 'none';
+    stationWarning.textContent = '';
+  }
+}
+
+/**
+ * Update Now Playing text
+ * For demo, fallback display station name,
+ * Extendable to fetch now playing info if API available
+ */
+function setNowPlaying(station) {
+  clearInterval(nowPlayingInterval);
+  nowPlaying.textContent = `Now Playing: ${station.name}`;
+  // Extend: add API fetch here if available for now playing
+  // Currently fallback for demonstration
+}
+
+/**
+ * Initialize the player with selected station
+ */
+async function initPlayer() {
+  const s = getStation();
+  radioPlayer.src = s.url;
+  updateBitrate(s);
+  await updateLogo(s);
+  setNowPlaying(s);
+  displayWarning('');
+  updateStatus('Loading...');
+  radioPlayer.play()
+    .then(()=>updateStatus('Playing!'))
+    .catch(()=>updateStatus('Error playing'));
+}
+
+// Event listeners
+stationSelector.addEventListener('change', () => {
+  initPlayer();
+  localStorage.setItem('lastStationIdx', stationSelector.value);
+});
+
+document.getElementById('prevStation').addEventListener('click', () => {
+  let idx = parseInt(stationSelector.value,10);
+  idx = (idx - 1 + stations.length) % stations.length;
+  stationSelector.value = idx;
+  stationSelector.dispatchEvent(new Event('change'));
+});
+
+document.getElementById('nextStation').addEventListener('click', () => {
+  let idx = parseInt(stationSelector.value,10);
+  idx = (idx + 1) % stations.length;
+  stationSelector.value = idx;
+  stationSelector.dispatchEvent(new Event('change'));
+});
+
+volumeSlider.addEventListener('input', () => {
+  radioPlayer.volume = volumeSlider.value;
+  volumeIcon.textContent = radioPlayer.volume == 0 ? '🔇' : '🔊';
+  localStorage.setItem('radioVolume', radioPlayer.volume);
+});
+
+const isIOS = /iP(ad|hone|od)/.test(navigator.userAgent) && !window.MSStream;
+if(isIOS){
+  document.querySelector('.volume-controls').style.display='none';
+  iosWarning.style.display='block';
+}
+
+// Theme toggle
+function setTheme(cls) {
+  document.body.classList.toggle('dark', cls==='dark');
+  document.body.classList.toggle('light', cls==='light');
+  toggleThemeBtn.textContent = document.body.classList.contains('dark')
+    ? "☀️ Switch to light mode"
+    : "🌙 Switch to dark mode";
+}
+toggleThemeBtn.addEventListener('click', () => {
+  const nowDark = !document.body.classList.contains('dark');
+  setTheme(nowDark ? 'dark' : 'light');
+  localStorage.setItem('theme', nowDark ? 'dark' : 'light');
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  fillStationList();
+  let lastIdx = parseInt(localStorage.getItem('lastStationIdx')||'0',10);
+  lastIdx = (isNaN(lastIdx) || lastIdx<0 || lastIdx>=stations.length) ? 0 : lastIdx;
+  stationSelector.value = lastIdx;
+
+  const themeLS = localStorage.getItem('theme');
+  if(themeLS) setTheme(themeLS);
+  else if(window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+  else setTheme('light');
+
+  const vol = +(localStorage.getItem('radioVolume')||'0.99');
+  if(!isIOS && vol>=0 && vol<=1) {
+    radioPlayer.volume = volumeSlider.value = vol;
+    volumeIcon.textContent = vol==0 ? '🔇' : '🔊';
   }
 
-  function startNowPlayingUpdater(url) {
-    if (nowPlayingInterval) clearInterval(nowPlayingInterval);
-    fetchNowPlaying(url);
-    const key = getStationApiKey(url);
-    // Refacem update doar la posturile care furnizează now playing
-    if (key) {
-      nowPlayingInterval = setInterval(() => {
-        fetchNowPlaying(stationSelector.value);
-      }, 20000); // update la 20 secunde
-    }
-  }
+  initPlayer();
+});
+radioPlayer.addEventListener('waiting', ()=>updateStatus('Loading...'));
+radioPlayer.addEventListener('error', ()=>updateStatus('Error playing'));
+radioPlayer.addEventListener('playing', ()=>updateStatus('Playing!'));
 
-  // ================== INIT PLAYER ====================
-  function initPlayer() {
-    const url = stationSelector.value;
-    radioPlayer.src = url;
-    updateLogo(url);
-    updateBitrate(url);
-    updateStatus('🔄 Loading...');
-    startNowPlayingUpdater(url);
-    radioPlayer.play().then(() => updateStatus('✅ Playing...')).catch(() => updateStatus('❌ Error Playing'));
-  }
-
-  // ================== Navigare prev/next =============
-  function changeStation(newIndex) {
-    stationSelector.selectedIndex = newIndex;
-    initPlayer();
-    localStorage.setItem('lastStation', stationSelector.value);
-  }
-
-  document.getElementById('prevStation').addEventListener('click', () => {
-    const total = stationSelector.options.length;
-    const index = (stationSelector.selectedIndex - 1 + total) % total;
-    changeStation(index);
+// Service Worker for PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load',() => {
+    navigator.serviceWorker.register('sw.js')
+    .then(reg => console.log('✔️ Service Worker registered:', reg))
+    .catch(err => console.error('❌ Service Worker error:', err));
   });
-
-  document.getElementById('nextStation').addEventListener('click', () => {
-    const total = stationSelector.options.length;
-    const index = (stationSelector.selectedIndex + 1) % total;
-    changeStation(index);
-  });
-
-  stationSelector.addEventListener('change', () => {
-    initPlayer();
-    localStorage.setItem('lastStation', stationSelector.value);
-  });
-
-  // ============ Volume Control (nu pe iOS) ============
-  volumeSlider.addEventListener('input', () => {
-    radioPlayer.volume = volumeSlider.value;
-    volumeIcon.textContent = radioPlayer.volume == 0 ? '🔇' : '🔊';
-  });
-
-  // ============ Tema light/dark =======================
-  toggleThemeBtn.addEventListener('click', () => {
-    document.body.classList.toggle('dark');
-    toggleThemeBtn.textContent = document.body.classList.contains('dark') ? '☀️ Switch to light mode' : '🌙 Switch to dark mode';
-    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-  });
-
-  // =========== Service Worker =========================
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker
-        .register('sw.js')
-        .then(reg => console.log('✔️ Service Worker registered:', reg))
-        .catch(err => console.error('❌ Service Worker error:', err));
-    });
-  }
-
-  // ==== INIT after DOM load: fallback, theme, etc =====
-  window.addEventListener('DOMContentLoaded', () => {
-    const savedStation = localStorage.getItem('lastStation');
-    const savedTheme = localStorage.getItem('theme');
-    let foundStation = false;
-    if (savedStation) {
-      for (let i = 0; i < stationSelector.options.length; i++) {
-        if (stationSelector.options[i].value === savedStation) {
-          stationSelector.selectedIndex = i;
-          foundStation = true;
-          break;
-        }
-      }
-    }
-    if (!foundStation) stationSelector.selectedIndex = 0;
-
-    if (savedTheme === 'dark') {
-      document.body.classList.add('dark');
-      toggleThemeBtn.textContent = '☀️ Switch to light mode';
-    } else {
-      document.body.classList.remove('dark');
-      toggleThemeBtn.textContent = '🌙 Switch to dark mode';
-    }
-    initPlayer();
-    if (!isIOS) radioPlayer.volume = volumeSlider.value;
-  });
-
-  // === Audio status ===
-  radioPlayer.addEventListener('waiting', () => updateStatus('🔄 Loading...'));
-  radioPlayer.addEventListener('error', () => updateStatus('❌ Error Playing'));
-  radioPlayer.addEventListener('playing', () => updateStatus('✅ Playing...'));
-
+}
 </script>
+
 </body>
 </html>
