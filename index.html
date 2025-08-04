@@ -203,7 +203,7 @@
       <span class="title">Radio Live România</span>
     </h1>
 
-    <label for="stationSelector">Alege postul din lista de mai jos:</label>
+    <label for="stationSelector">Select a radio station from the list below:</label>
     <select id="stationSelector">
       <option value="https://live.kissfm.ro/kissfm.aacp">Kiss FM (RO)</option>
       <option value="https://ivm.antenaplay.ro/liveaudio/radiozu/playlist.m3u8">Radio ZU (RO)</option>
@@ -236,7 +236,7 @@
 
     <div class="nav-buttons">
       <!-- PREV STATION SVG -->
-      <button id="prevStation" title="Postul anterior" aria-label="Postul anterior">
+      <button id="prevStation" title="Previous station" aria-label="Previous station">
         <svg viewBox="0 0 56 34" fill="none" aria-hidden="false" focusable="false" xmlns="http://www.w3.org/2000/svg">
           <title>Postul anterior</title>
           <rect class="line" x="8" y="7" width="4" height="20" rx="2" fill="white"/>
@@ -245,7 +245,7 @@
         </svg>
       </button>
       <!-- NEXT STATION SVG -->
-      <button id="nextStation" title="Postul următor" aria-label="Postul următor">
+      <button id="nextStation" title="Next Radio Station" aria-label="Next Radio Station">
         <svg viewBox="0 0 56 34" fill="none" aria-hidden="false" focusable="false" xmlns="http://www.w3.org/2000/svg">
           <title>Postul următor</title>
           <rect class="line" x="44" y="7" width="4" height="20" rx="2" fill="white"/>
@@ -255,7 +255,7 @@
       </button>
     </div>
 
-    <div id="status" class="status">🔄 Se încarcă...</div>
+    <div id="status" class="status">🔄 Loading...</div>
     <div id="nowPlaying" class="status">🎵 Now Playing: ...</div>
     <button class="toggle-theme" id="toggleTheme">🌙 Trecere la dark mode</button>
     <footer>
@@ -296,7 +296,7 @@
   };
 
   // Text standard pentru posturile fără Now Playing
-  const notAvailableMsg = "🎵 Now Playing: Nu este disponibil pentru acest post de radio";
+  const notAvailableMsg = "🎵 Now Playing: Not available for this radio station";
 
   // ======= iOS Detection =========
   const isIOS = /iPad|iPhone|iPod/i.test(navigator.userAgent) && !window.MSStream;
@@ -386,9 +386,9 @@
     radioPlayer.src = url;
     updateLogo(url);
     updateBitrate(url);
-    updateStatus('🔄 Se încarcă...');
+    updateStatus('🔄 Loading...');
     startNowPlayingUpdater(url);
-    radioPlayer.play().then(() => updateStatus('✅ Redare în curs.')).catch(() => updateStatus('❌ Eroare la redare.'));
+    radioPlayer.play().then(() => updateStatus('✅ Playing')).catch(() => updateStatus('❌ Error Playing'));
   }
 
   // ================== Navigare prev/next =============
@@ -466,9 +466,9 @@
   });
 
   // === Audio status ===
-  radioPlayer.addEventListener('waiting', () => updateStatus('🔄 Se încarcă...'));
-  radioPlayer.addEventListener('error', () => updateStatus('❌ Eroare la redare.'));
-  radioPlayer.addEventListener('playing', () => updateStatus('✅ Redare în curs.'));
+  radioPlayer.addEventListener('waiting', () => updateStatus('🔄 Loading...'));
+  radioPlayer.addEventListener('error', () => updateStatus('❌ Error Playing'));
+  radioPlayer.addEventListener('playing', () => updateStatus('✅ Playing'));
 
 </script>
 </body>
